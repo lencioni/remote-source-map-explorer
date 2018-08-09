@@ -1,0 +1,29 @@
+{
+  "name": "remote-source-map-explorer",
+  "version": "1.0.0",
+  "description": "Wrapper around source-map-explorer that works with remote URLs",
+  "bin": {
+    "remote-source-map-explorer": "index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lencioni/remote-source-map-explorer.git"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "source-map",
+    "browser",
+    "minification"
+  ],
+  "author": "Joe Lencioni <joe.lencioni@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "docopt": "^0.6.2",
+    "opn": "^5.3.0",
+    "request": "^2.87.0",
+    "source-map-explorer": "^1.6.0",
+    "temp": "^0.8.3"
+  }
+}
