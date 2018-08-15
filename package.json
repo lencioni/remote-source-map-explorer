@@ -1,6 +1,6 @@
 {
   "name": "remote-source-map-explorer",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Wrapper around source-map-explorer that works with remote URLs",
   "bin": {
     "remote-source-map-explorer": "index.js"
