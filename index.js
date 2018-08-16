@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 const fs = require('fs');
+const { URL } = require('url');
 
 const { docopt } = require('docopt');
 const request = require('request');
@@ -11,7 +12,6 @@ const sourceMapExplorer = require('source-map-explorer');
 const { version } = require('./package.json');
 
 const URL_ARG = '<url.js>';
-const URL_REGEX = /^https?:\/\//;
 
 const doc = `Fetch a remote JavaScript file and its sourcemap, and generate a source-map-explorer visualization
 
@@ -24,13 +24,7 @@ Options:
 `;
 
 const args = docopt(doc, { version });
-const scriptURL = args[URL_ARG];
-
-// Verify URL format
-// TODO maybe there is a node way to do this?
-if (!URL_REGEX.test(scriptURL)) {
-  throw new Error(`Invalid URL: ${scriptURL}`);
-}
+const scriptURL = new URL(args[URL_ARG]);
 
 // Fetch file and source map
 function get(uri) {
@@ -69,12 +63,7 @@ get(scriptURL).then((scriptBody) => {
     throw new Error('sourceMappingURL not found');
   }
 
-  const sourceMappingURL = lastLine.slice(searchToken.length);
-
-  // TODO this should be able to handle relative paths
-  if (!URL_REGEX.test(sourceMappingURL)) {
-    throw new Error(`sourceMappingURL does not look like a URL: ${sourceMappingURL}`);
-  }
+  const sourceMappingURL = new URL(lastLine.slice(searchToken.length), scriptURL);
 
   console.log(`Fetching ${sourceMappingURL}...`);
   return get(sourceMappingURL).then((sourceMapBody) => {
