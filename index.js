@@ -53,17 +53,19 @@ function get(uri) {
 
 console.log(`Fetching ${scriptURL}...`);
 
+const sourceMapURLRegex = /^\/\/# sourceMappingURL=(.+)$/m;
+
 get(scriptURL).then((scriptBody) => {
-  // Look for sourceMappingURL
-  const lastLine = scriptBody.slice(scriptBody.lastIndexOf('\n') + 1);
+  // Only look at last n characters of the script in case the script file is
+  // very large so we don't have to scan through the whole thing.
+  const lastChunkOfScript = scriptBody.slice(-5000);
+  const matches = lastChunkOfScript.match(sourceMapURLRegex);
 
-  const searchToken = '//# sourceMappingURL=';
-
-  if (!lastLine.startsWith(searchToken)) {
+  if (!matches) {
     throw new Error('sourceMappingURL not found');
   }
 
-  const sourceMappingURL = new URL(lastLine.slice(searchToken.length), scriptURL);
+  const sourceMappingURL = new URL(matches[1], scriptURL);
 
   console.log(`Fetching ${sourceMappingURL}...`);
   return get(sourceMappingURL).then((sourceMapBody) => {
